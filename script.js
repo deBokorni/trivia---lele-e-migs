@@ -29,3 +29,16 @@ const translateText = async (text) => {
         return text;
     }
 };
+
+/**
+ * Função auxiliar para decodificar entidades HTML 
+ * @param {string} text texto com entidades HTM
+ * @returns {string} texto decodificado
+ */
+
+function decodeHtmlEntities(text) {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+
