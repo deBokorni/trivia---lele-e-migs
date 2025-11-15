@@ -116,3 +116,60 @@ const startGame = async (difficulty) => {
     score = 0;
     displayQuestion();
 };
+
+
+
+//Exiber a pergunta atual na tela
+
+const displayQuestion = () => {
+    if (currentQuestionIndex >= triviaData.length) {
+        showFinalScore();
+        return;
+    }
+
+    const questionData = triviaData[currentQuestionIndex];
+    triviaContainer.innerHTML = `
+        <h3>Questão ${currentQuestionIndex + 1} de ${triviaData.length}</h3>
+        <p>${questionData.question}</p>
+        <div id="answer-buttons">
+            ${questionData.all_answers.map(answer => 
+                `<button class="answer-button">${answer}</button>`
+            ).join('')}
+        </div>
+    `;
+
+    // Adiciona event listeners aos botões de resposta
+    document.querySelectorAll('.answer-button').forEach(button => {
+        button.addEventListener('click', () => handleAnswer(button, questionData.correct_answer));
+    });
+};
+
+/**
+ * Lida com a seleção de uma resposta pelo usuário.
+ * @param {HTMLElement} selectedButton botão que foi clicado
+ * @param {string} correctAnswer resposta correta para a pergunta atual.
+ */
+const handleAnswer = (selectedButton, correctAnswer) => {
+    const isCorrect = selectedButton.innerText === correctAnswer;
+
+    // Desabilita todos os botões de resposta e marca a correta/incorreta
+    document.querySelectorAll('.answer-button').forEach(button => {
+        button.classList.add('disabled');
+        if (button.innerText === correctAnswer) {
+            button.classList.add('correct');
+        } else if (button === selectedButton) {
+            button.classList.add('incorrect');
+        }
+    });
+
+    if (isCorrect) {
+        score++;
+    }
+
+    // Avança para a próxima pergunta após um pequeno atraso
+    setTimeout(() => {
+        currentQuestionIndex++;
+        displayQuestion();
+    }, 2000); // 
+};
+
