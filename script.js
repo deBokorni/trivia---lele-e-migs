@@ -42,3 +42,26 @@ function decodeHtmlEntities(text) {
     return textarea.value;
 }
 
+/**
+ * Função para buscar perguntas na Open Trivia Database.
+ * @param {string} difficulty A dificuldade das perguntas (easy, medium, hard).
+ * @returns {Promise<Array<Object>>} Um array de objetos de perguntas.
+ */
+
+const fetchTriviaQuestions = async (difficulty) => {
+    const CATEGORY_ID = 15; 
+    const url = `https://opentdb.com/api.php?amount=${NUMBER_OF_QUESTIONS}&category=${CATEGORY_ID}&difficulty=${difficulty}&type=multiple`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.response_code !== 0) {
+            throw new Error('Erro ao buscar perguntas. Código de resposta: ' + data.response_code);
+        }
+        return data.results;
+    } catch (error) {
+        console.error('Erro ao buscar perguntas:', error);
+        alert('Não foi possível carregar as perguntas. Tente novamente.');
+        return [];
+    }
+};
