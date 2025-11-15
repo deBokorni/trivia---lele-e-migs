@@ -173,3 +173,15 @@ const handleAnswer = (selectedButton, correctAnswer) => {
     }, 2000); // 
 };
 
+//exibiçao do placar final do jogo
+
+const showFinalScore = () => {
+    triviaContainer.style.display = 'none';
+    scoreContainer.style.display = 'block';
+    scoreContainer.innerHTML = `
+        <h2>Fim de Jogo!</h2>
+        <p>Você acertou ${score} de ${triviaData.length} perguntas.</p>
+        <button onclick="window.location.reload()">Jogar Novamente</button>
+    `;
+};
+
