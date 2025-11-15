@@ -185,3 +185,12 @@ const showFinalScore = () => {
     `;
 };
 
+//inicio do jogo
+
+// Adiciona event listeners para a seleção de dificuldade
+document.querySelectorAll('.difficulty-btn').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const difficulty = e.target.getAttribute('data-difficulty');
+        startGame(difficulty);
+    });
+});
