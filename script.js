@@ -65,3 +65,54 @@ const fetchTriviaQuestions = async (difficulty) => {
         return [];
     }
 };
+
+
+//Funções de logica do jogo
+/**
+ * Inicia o jogo após a seleção da dificuldade.
+ * @param {string} difficulty dificuldade selecionada
+ */
+
+const startGame = async (difficulty) => {
+    difficultySelection.style.display = 'none';
+    triviaContainer.innerHTML = '<h2>Carregando e traduzindo perguntas...</h2>';
+    triviaContainer.style.display = 'block';
+
+    const questions = await fetchTriviaQuestions(difficulty);
+    if (questions.length === 0) {
+        // Se falhar, volta para a seleção de dificuldade
+        triviaContainer.style.display = 'none';
+        difficultySelection.style.display = 'block';
+        return;
+    }
+
+    // Traduzir todas as perguntas e respostas
+    triviaData = await Promise.all(questions.map(async (q) => {
+        // Decodifica entidades HTML antes de traduzir
+        const questionText = decodeHtmlEntities(q.question);
+        const correctText = decodeHtmlEntities(q.correct_answer);
+        const incorrectTexts = q.incorrect_answers.map(decodeHtmlEntities);
+
+        const translatedQuestion = await translateText(questionText);
+        const translatedCorrect = await translateText(correctText);
+        const translatedIncorrect = await Promise.all(incorrectTexts.map(translateText));
+
+        // Combina e embaralha as respostas
+        const allAnswers = [translatedCorrect, ...translatedIncorrect];
+        // Função de embaralhamento Fisher-Yates simplificada
+        for (let i = allAnswers.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
+        }
+
+        return {
+            question: translatedQuestion,
+            correct_answer: translatedCorrect,
+            all_answers: allAnswers
+        };
+    }));
+
+    currentQuestionIndex = 0;
+    score = 0;
+    displayQuestion();
+};
