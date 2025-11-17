@@ -2,7 +2,6 @@
 let currentQuestionIndex = 0;
 let score = 0;
 let triviaData = [];
-const NUMBER_OF_QUESTIONS = 5; // Mínimo de 5 questões
 
 const gameArea = document.getElementById('game-area');
 const difficultySelection = document.getElementById('difficulty-selection');
@@ -44,14 +43,14 @@ function decodeHtmlEntities(text) {
 
 /**
  * Função para buscar perguntas na Open Trivia Database.
- * @param {string} difficulty A dificuldade das perguntas (easy, medium, hard).
- * @returns {Promise<Array<Object>>} Um array de objetos de perguntas.
+ * @param {string} difficulty A dificuldade das perguntas
+ * @returns {Promise<Array<Object>>} Um array de objetos de perguntas
  */
 
-const fetchTriviaQuestions = async (difficulty) => {
-    const CATEGORY_ID = 15; 
-    const url = `https://opentdb.com/api.php?amount=${NUMBER_OF_QUESTIONS}&category=${CATEGORY_ID}&difficulty=${difficulty}&type=multiple`;
-    
+const fetchTriviaQuestions = async()=> {
+
+    const  url = `https://opentdb.com/api.php?amount=5&category=15`
+
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -194,3 +193,5 @@ document.querySelectorAll('.difficulty-btn').forEach(button => {
         startGame(difficulty);
     });
 });
+
+
